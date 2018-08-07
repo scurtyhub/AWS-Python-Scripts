@@ -1,0 +1,10 @@
+#Binaries
+bin/
+lib/
+include/
+*.cfg
+*.json
+headers
+
+#cache
+__pycache__
