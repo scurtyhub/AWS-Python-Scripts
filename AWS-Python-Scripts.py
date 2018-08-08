@@ -6,6 +6,7 @@ def user_parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument("-aU","--allUsers", action="store_true", help="displays all users the AWS account")
     parser.add_argument("-cM","--checkMFA", action="store_true", help="displays all users with MFA Disabled in the AWS account")
+    parser.add_argument("-pP","--checkPasswordPolicy", action="store_true", help="checks the password policy for the account")
     return parser.parse_args()
 
 #Function to list all the users in the account
@@ -35,7 +36,7 @@ def checkMFA(userMFA):
 if __name__ == '__main__':
     args = user_parse_args()
 
-    if (args.allUsers | args.checkMFA) == False:
+    if (args.allUsers | args.checkMFA | args.checkPasswordPolicy) == False:
         print("Choose an argument.\n-h    help")
     else:
         #prints list of users in the AWS account
@@ -55,6 +56,15 @@ if __name__ == '__main__':
                 else:
                     print("UserName: "+str(i)+", MFAEnabled: No")
         
+        if args.checkPasswordPolicy:
+            try:
+                passwordPolicy = boto3.client('iam')
+                responsePasswordPolicy = passwordPolicy.get_account_password_policy()['PasswordPolicy']
+                print("Password Policy Set. Below are the Parameters:\n")
+                for k,v in responsePasswordPolicy.items():
+                    print(str(k)+": "+str(v))
+            except passwordPolicy.exceptions.NoSuchEntityException:
+                print("No Password Policy found!!!")        
 
 
                                 

@@ -5,6 +5,7 @@ include/
 *.cfg
 *.json
 headers
+.DS_Store
 
 #cache
 __pycache__
