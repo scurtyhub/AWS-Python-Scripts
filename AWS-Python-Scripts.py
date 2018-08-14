@@ -1,5 +1,6 @@
 import boto3
 import argparse
+from datetime import datetime, date
 
 #function Arg parse
 def user_parse_args():
@@ -7,6 +8,7 @@ def user_parse_args():
     parser.add_argument("-aU","--allUsers", action="store_true", help="displays all users the AWS account")
     parser.add_argument("-cM","--checkMFA", action="store_true", help="displays all users with MFA Disabled in the AWS account")
     parser.add_argument("-pP","--checkPasswordPolicy", action="store_true", help="checks the password policy for the account")
+    parser.add_argument("-aK","--ListAccessKeys", action="store_true", help="Lists the access keys for each user")
     return parser.parse_args()
 
 #Function to list all the users in the account
@@ -36,7 +38,7 @@ def checkMFA(userMFA):
 if __name__ == '__main__':
     args = user_parse_args()
 
-    if (args.allUsers | args.checkMFA | args.checkPasswordPolicy) == False:
+    if (args.allUsers | args.checkMFA | args.checkPasswordPolicy | args.ListAccessKeys) == False:
         print("Choose an argument.\n-h    help")
     else:
         #prints list of users in the AWS account
@@ -56,6 +58,7 @@ if __name__ == '__main__':
                 else:
                     print("UserName: "+str(i)+", MFAEnabled: No")
         
+        #checks the password policy for the AWS account
         if args.checkPasswordPolicy:
             try:
                 passwordPolicy = boto3.client('iam')
@@ -64,7 +67,42 @@ if __name__ == '__main__':
                 for k,v in responsePasswordPolicy.items():
                     print(str(k)+": "+str(v))
             except passwordPolicy.exceptions.NoSuchEntityException:
-                print("No Password Policy found!!!")        
+                print("No Password Policy found!!!")     
+
+        #lists the Access keys for the AWS accounts
+        if args.ListAccessKeys:
+            AllUsers = listAllUsers()
+            accessKeys = boto3.client('iam')
+            emptyAccounts = []
+            for i in AllUsers:
+                accessKeysresponse = accessKeys.list_access_keys(UserName=i)['AccessKeyMetadata']
+                
+                if len(accessKeysresponse) == 0:
+                    emptyAccounts.append(i)
+                else:
+                    activeAccessKeys = {}
+                    inactiveAccessKeys = {}
+                    print("\nAcccount: "+str(i))
+                    print("\tNumber of Access Keys for this account: "+str(len(accessKeysresponse)))
+                    for a in accessKeysresponse:
+                        if a['Status'] == 'Active':
+                            activeAccessKeys[a['AccessKeyId']] = a['CreateDate']
+                            print(datetime.utcnow().date()-a['CreateDate'].date())
+                        else:
+                            inactiveAccessKeys[a['AccessKeyId']] = a['CreateDate']
+                    if len(activeAccessKeys) != 0:
+                        print("\tActive No. of Access Keys:"+str(len(activeAccessKeys)))
+                    if len(inactiveAccessKeys) != 0:
+                        print("\tInactive No. of Access Keys:"+str(len(inactiveAccessKeys)))
+            print("\nAccounts with NO Access Keys:")
+            for i in emptyAccounts:
+                print("\t"+str(i))
+
+
+
+
+                
+
 
 
                                 
