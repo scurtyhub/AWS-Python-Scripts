@@ -26,3 +26,9 @@ OR
 python AWS-Python-Scripts.py [--help] [--allUsers] [--checkMFA] [--checkPasswordPolicy] [--listAccessKeys] [--unUsedAccessKeys] [--passwordNotUpdated]
 ```
 
+* ```--allUsers```: Displays all users in your AWS account.
+* ``--checkMFA``: Checks and displays all the IAM users that has MFA disabled.
+* ``--checkPasswordPolicy``: checks the password policy for the account.
+* ``--listAccessKeys``: lists the access keys for each user.
+* ``--unUsedAccessKeys``: displays all the access keys not accessed in last 90 days.
+* ``--passwordNotUpdated``: isplays all the accounts that has passwords not updated in the last 90 days.
