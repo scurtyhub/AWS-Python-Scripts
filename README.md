@@ -18,4 +18,4 @@ pip install -r requirements.txt
 
 Using script
 -----
-Before running the script, please make sure you have [aws cli](https://docs.aws.amazon.com/cli/latest/userguide/installing.html) installed. Create an Access key in your AWS account and [configure](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html) it on your machine.
+Before running the script, please make sure you have [aws cli](https://docs.aws.amazon.com/cli/latest/userguide/installing.html) installed. Create an Access key in your AWS account with proper permissions and [configure aws cli](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html) it on your machine.
