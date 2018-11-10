@@ -127,16 +127,4 @@ if __name__ == '__main__':
                         if(passwordAge > 89):
                             print("For user \""+str(i)+"\", password last updated "+str(passwordAge)+" days ago")
                     except client.exceptions.NoSuchEntityException:
-                        print("For User \""+str(i)+"\", no password creation date found!!!") 
-
-
-
-
-
-
-
-                
-
-
-
-                                
+                        print("For User \""+str(i)+"\", no password creation date found!!!")
