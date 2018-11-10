@@ -8,8 +8,9 @@ def user_parse_args():
     parser.add_argument("-aU","--allUsers", action="store_true", help="displays all users the AWS account")
     parser.add_argument("-cM","--checkMFA", action="store_true", help="displays all users with MFA Disabled in the AWS account")
     parser.add_argument("-pP","--checkPasswordPolicy", action="store_true", help="checks the password policy for the account")
-    parser.add_argument("-aK","--ListAccessKeys", action="store_true", help="Lists the access keys for each user")
-    parser.add_argument("-uA","--unUsedAccessKeys", action="store_true", help="Displays all the access keys not accessed in last 90 days")
+    parser.add_argument("-aK","--listAccessKeys", action="store_true", help="lists the access keys for each user")
+    parser.add_argument("-uA","--unUsedAccessKeys", action="store_true", help="displays all the access keys not accessed in last 90 days")
+    parser.add_argument("-pN","--passwordNotUpdated",action="store_true", help="displays all the accounts that has passwords not updated in the last 90 days")
     return parser.parse_args()
 
 #Function to list all the users in the account
@@ -39,7 +40,7 @@ def checkMFA(userMFA):
 if __name__ == '__main__':
     args = user_parse_args()
 
-    if (args.allUsers | args.checkMFA | args.checkPasswordPolicy | args.ListAccessKeys | args.unUsedAccessKeys) == False:
+    if (args.allUsers | args.checkMFA | args.checkPasswordPolicy | args.listAccessKeys | args.unUsedAccessKeys | args.passwordNotUpdated) == False:
         print("Choose an argument.\n-h    help")
     else:
         #prints list of users in the AWS account
@@ -71,7 +72,7 @@ if __name__ == '__main__':
                 print("No Password Policy found!!!")     
 
         #lists the Access keys for the AWS accounts
-        if args.ListAccessKeys:
+        if args.listAccessKeys:
             AllUsers = listAllUsers()
             accessKeys = boto3.client('iam')
             emptyAccounts = []
@@ -110,6 +111,23 @@ if __name__ == '__main__':
                 print("Access Keys NOT assessed in last 90 days")
             else:
                 print("Access Keys USED in last 90 days")
+        
+        #display all the accounts with passwords not updated in more than 90 days
+        if args.passwordNotUpdated:
+            UsersAll = listAllUsers()
+            if len(UsersAll) == 0:
+                print("\nNo Users found!!!")
+            else:
+                print()
+                for i in UsersAll:
+                    try:
+                        client = boto3.client('iam')
+                        response = client.get_login_profile(UserName=i)
+                        passwordAge = int(str(datetime.utcnow().date() - response['LoginProfile']['CreateDate'].date()).split(' ')[0])
+                        if(passwordAge > 89):
+                            print("For user \""+str(i)+"\", password last updated "+str(passwordAge)+" days ago")
+                    except client.exceptions.NoSuchEntityException:
+                        print("For User \""+str(i)+"\", no password creation date found!!!") 
 
 
 
