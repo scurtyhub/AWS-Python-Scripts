@@ -31,4 +31,25 @@ python AWS-Python-Scripts.py [--help] [--allUsers] [--checkMFA] [--checkPassword
 * ``--checkPasswordPolicy``: checks the password policy for the account.
 * ``--listAccessKeys``: lists the access keys for each user.
 * ``--unUsedAccessKeys``: displays all the access keys not accessed in last 90 days.
-* ``--passwordNotUpdated``: isplays all the accounts that has passwords not updated in the last 90 days.
+* ``--passwordNotUpdated``: Displays all the accounts that has passwords not updated in the last 90 days.
+ 
+Example:
+-----
+
+```
+python AWS-Python-Scripts.py -aU
+```
+
+### Output:
+```
+Total number of Users in the account:6
+
+Users:
+awssecurity
+deployment
+test_user_123
+test_user_password_policy
+test_user_password_policy_two
+test_user_check
+```
+
