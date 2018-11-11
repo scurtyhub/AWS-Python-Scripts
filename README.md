@@ -22,8 +22,7 @@ Before running the script, please make sure you have [aws cli](https://docs.aws.
 
 ```
 python AWS-Python-Scripts.py [-h] [-aU] [-cM] [-pP] [-aK] [-uA] [-pN]
-```
-```
+
 python AWS-Python-Scripts.py [--help] [--allUsers] [--checkMFA] [--checkPasswordPolicy] [--listAccessKeys] [--unUsedAccessKeys] [--passwordNotUpdated]
 ```
 
