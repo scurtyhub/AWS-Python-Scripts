@@ -11,6 +11,7 @@ def user_parse_args():
     parser.add_argument("-aK","--listAccessKeys", action="store_true", help="lists the access keys for each user")
     parser.add_argument("-uA","--unUsedAccessKeys", action="store_true", help="displays all the access keys not accessed in last 90 days")
     parser.add_argument("-pN","--passwordNotUpdated",action="store_true", help="displays all the accounts that has passwords not updated in the last 90 days")
+    parser.add_argument("-nT","--noEc2Tags",action="store_true", help="displays all the Ec2 instances that have no tags")
     return parser.parse_args()
 
 #Function to list all the users in the account
@@ -40,7 +41,7 @@ def checkMFA(userMFA):
 if __name__ == '__main__':
     args = user_parse_args()
 
-    if (args.allUsers | args.checkMFA | args.checkPasswordPolicy | args.listAccessKeys | args.unUsedAccessKeys | args.passwordNotUpdated) == False:
+    if (args.allUsers | args.checkMFA | args.checkPasswordPolicy | args.listAccessKeys | args.unUsedAccessKeys | args.passwordNotUpdated | args.noEc2Tags) == False:
         print("Choose an argument.\n-h    help")
     else:
         #prints list of users in the AWS account
@@ -128,3 +129,11 @@ if __name__ == '__main__':
                             print("For user \""+str(i)+"\", password last updated "+str(passwordAge)+" days ago")
                     except client.exceptions.NoSuchEntityException:
                         print("For User \""+str(i)+"\", no password creation date found!!!")
+
+        #display EC2 instances that doesn't have any tags
+        if args.noEc2Tags:
+            client = boto3.client('ec2')
+            reservations = client.describe_instances()['Reservations']
+            if(len(reservations[0]['Instances'][0]['Tags']) == 0):
+                print("Instance Id "+str(reservations[0]['Instances'][0]['InstanceId'])+" and Instance State "+str(reservations[0]['Instances'][0]['State']['Name']))
+            
