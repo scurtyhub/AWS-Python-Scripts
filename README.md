@@ -21,9 +21,9 @@ Using script
 Before running the script, please make sure you have [aws cli](https://docs.aws.amazon.com/cli/latest/userguide/installing.html) installed. Create an Access key in your AWS account with proper permissions and [configure aws cli](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html) it on your machine.
 
 ```
-python AWS-Python-Scripts.py [-h] [-aU] [-cM] [-pP] [-aK] [-uA] [-pN]
+python AWS-Python-Scripts.py [-h] [-aU] [-cM] [-pP] [-aK] [-uA] [-pN] [-nT]
 
-python AWS-Python-Scripts.py [--help] [--allUsers] [--checkMFA] [--checkPasswordPolicy] [--listAccessKeys] [--unUsedAccessKeys] [--passwordNotUpdated]
+python AWS-Python-Scripts.py [--help] [--allUsers] [--checkMFA] [--checkPasswordPolicy] [--listAccessKeys] [--unUsedAccessKeys] [--passwordNotUpdated] [--noEc2Tags]
 ```
 
 * ```--allUsers```: Lists all users in your AWS account.
@@ -32,6 +32,7 @@ python AWS-Python-Scripts.py [--help] [--allUsers] [--checkMFA] [--checkPassword
 * ``--listAccessKeys``: Lists the access keys for each user.
 * ``--unUsedAccessKeys``: Lists all the access keys not accessed in last 90 days.
 * ``--passwordNotUpdated``: Lists all the accounts that has passwords not updated in the last 90 days.
+* ``--noEc2Tags``: Lists Ec2 instance ids that doesn't have tags.
  
 Example:
 -----
