@@ -134,6 +134,9 @@ if __name__ == '__main__':
         if args.noEc2Tags:
             client = boto3.client('ec2')
             reservations = client.describe_instances()['Reservations']
-            if(len(reservations[0]['Instances'][0]['Tags']) == 0):
-                print("Instance Id "+str(reservations[0]['Instances'][0]['InstanceId'])+" and Instance State "+str(reservations[0]['Instances'][0]['State']['Name']))
+            print("Ec2 instances with no tags and its state:")
+            for i in reservations:
+                if 'Tags' not in i['Instances'][0]:
+                    print("Instance Id "+str(i['Instances'][0]['InstanceId'])+" and Instance state is "+str(i['Instances'][0]['State']['Name']))
+                
             
