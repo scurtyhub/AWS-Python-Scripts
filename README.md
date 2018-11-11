@@ -5,11 +5,11 @@ Dependencies
 =======
 Make sure you have [Python](https://www.python.org/downloads/) installed and PATH variable set.
 
-Ubuntu
+Mac OS
 -----
 If you don't have ```pip``` for Python:
 ```
-sudo apt-get install python-pip
+sudo easy_install pip
 ```
 You will need modules ```requests``` installed, which are in ```requirements.txt```
 ```
@@ -22,16 +22,17 @@ Before running the script, please make sure you have [aws cli](https://docs.aws.
 
 ```
 python AWS-Python-Scripts.py [-h] [-aU] [-cM] [-pP] [-aK] [-uA] [-pN]
-OR
+```
+```
 python AWS-Python-Scripts.py [--help] [--allUsers] [--checkMFA] [--checkPasswordPolicy] [--listAccessKeys] [--unUsedAccessKeys] [--passwordNotUpdated]
 ```
 
-* ```--allUsers```: Displays all users in your AWS account.
+* ```--allUsers```: Lists all users in your AWS account.
 * ``--checkMFA``: Checks and displays all the IAM users that has MFA disabled.
-* ``--checkPasswordPolicy``: checks the password policy for the account.
-* ``--listAccessKeys``: lists the access keys for each user.
-* ``--unUsedAccessKeys``: displays all the access keys not accessed in last 90 days.
-* ``--passwordNotUpdated``: Displays all the accounts that has passwords not updated in the last 90 days.
+* ``--checkPasswordPolicy``: Checks the password policy for the account.
+* ``--listAccessKeys``: Lists the access keys for each user.
+* ``--unUsedAccessKeys``: Lists all the access keys not accessed in last 90 days.
+* ``--passwordNotUpdated``: Lists all the accounts that has passwords not updated in the last 90 days.
  
 Example:
 -----
