@@ -9,9 +9,10 @@ def user_parse_args():
     parser.add_argument("-cM","--checkMFA", action="store_true", help="displays all users with MFA Disabled in the AWS account")
     parser.add_argument("-pP","--checkPasswordPolicy", action="store_true", help="checks the password policy for the account")
     parser.add_argument("-aK","--listAccessKeys", action="store_true", help="lists the access keys for each user")
-    parser.add_argument("-uA","--unUsedAccessKeys", action="store_true", help="displays all the access keys not accessed in last 90 days")
-    parser.add_argument("-pN","--passwordNotUpdated",action="store_true", help="displays all the accounts that has passwords not updated in the last 90 days")
-    parser.add_argument("-nT","--noEc2Tags",action="store_true", help="displays all the Ec2 instances that have no tags")
+    parser.add_argument("-uA","--unUsedAccessKeys", action="store_true", help="lists all the access keys not accessed in last 90 days")
+    parser.add_argument("-pN","--passwordNotUpdated",action="store_true", help="lists all the accounts that has passwords not updated in the last 90 days")
+    parser.add_argument("-nT","--noEc2Tags",action="store_true", help="lists all the Ec2 instances that have no tags")
+    parser.add_argument("-uP","--unusedPassword",action="store_true", help="lists all the IAM users who's passwords were not used in last 90 days")
     return parser.parse_args()
 
 #Function to list all the users in the account
@@ -41,7 +42,7 @@ def checkMFA(userMFA):
 if __name__ == '__main__':
     args = user_parse_args()
 
-    if (args.allUsers | args.checkMFA | args.checkPasswordPolicy | args.listAccessKeys | args.unUsedAccessKeys | args.passwordNotUpdated | args.noEc2Tags) == False:
+    if (args.allUsers | args.checkMFA | args.checkPasswordPolicy | args.listAccessKeys | args.unUsedAccessKeys | args.passwordNotUpdated | args.noEc2Tags | args.unusedPassword) == False:
         print("Choose an argument.\n-h    help")
     else:
         #prints list of users in the AWS account
@@ -138,5 +139,17 @@ if __name__ == '__main__':
             for i in reservations:
                 if 'Tags' not in i['Instances'][0]:
                     print("Instance Id "+str(i['Instances'][0]['InstanceId'])+" and Instance state is "+str(i['Instances'][0]['State']['Name']))
-                
+
+        #lists accounts that were not logged into in the last 90 days
+        if args.unusedPassword:
+            user_instance = boto3.client('iam')
+            response_user = user_instance.list_users()
+            for i in response_user['Users']:
+                if 'PasswordLastUsed' in i:
+                    age = int(str(datetime.utcnow().date() - i['PasswordLastUsed'].date()).split(' ')[0])
+                    if age > 89:
+                        print(str(i['UserName'])+" : Password last used: "+str(age)+" ago") 
+                    else:
+                        print(str(i['UserName'])+" Password never accessed!!!")
+                    
             
