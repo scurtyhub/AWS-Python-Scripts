@@ -146,10 +146,7 @@ if __name__ == '__main__':
             response_user = user_instance.list_users()
             for i in response_user['Users']:
                 if 'PasswordLastUsed' in i:
-                    age = int(str(datetime.utcnow().date() - i['PasswordLastUsed'].date()).split(' ')[0])
-                    if age > 89:
-                        print(str(i['UserName'])+" : Password last used: "+str(age)+" ago") 
-                    else:
-                        print(str(i['UserName'])+" Password never accessed!!!")
-                    
-            
+                    if (datetime.utcnow().date() != i['PasswordLastUsed'].date()):
+                        password_age = int(str(datetime.utcnow().date()-i['PasswordLastUsed'].date()).split(' ')[0])
+                        if password_age > 89:
+                            print("For IAM user "+str(i['UserName'])+", Password last used is "+str(password_age)+" days ago")
