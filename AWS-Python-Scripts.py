@@ -67,7 +67,69 @@ if __name__ == '__main__':
             try:
                 passwordPolicy = boto3.client('iam')
                 responsePasswordPolicy = passwordPolicy.get_account_password_policy()['PasswordPolicy']
-                print("Password Policy Set. Below are the Parameters:\n")
+                Min_Password_len = responsePasswordPolicy['MinimumPasswordLength']
+                upperCase = responsePasswordPolicy['RequireUppercaseCharacters']
+                
+                
+                
+                if(Min_Password_len < 14):
+                    print("MinimumPasswordLength: "+str(Min_Password_len)+" (Recommended minimum password length is 14)")
+                else:
+                    print("MinimumPasswordLength: "+str(Min_Password_len))
+                print()
+                if('RequireUppercaseCharacters' in responsePasswordPolicy):
+                    if(upperCase):
+                        print("Current password policy is set to require upper case letters")
+                    else:
+                        print("Current password policy DOESN't require upper case letters (Recommeded to have minimum of atleast 1 upper case letter)")
+                else:
+                    print("RequireUppercaseCharacters is not set (Recommended to have minimum of atleast 1 upper case letter)")
+                print()
+                if('RequireLowercaseCharacters' in responsePasswordPolicy):
+                    lowerCase = responsePasswordPolicy['RequireLowercaseCharacters']
+                    if(lowerCase):
+                        print("Current password policy is set to require lower case letters")
+                    else:
+                        print("Current password policy DOESN'T require lower case letters (Recommended to have minimum of atleast 1 lower case letter)")
+                else:
+                    print("RequireLowercaseCharacters is not set (Recommended to have minimum of atleast 1 lower case letter)")
+                print()
+                if('RequireSymbols' in responsePasswordPolicy):
+                    requireSymbols = responsePasswordPolicy['RequireSymbols']
+                    if(requireSymbols):
+                        print("Current password policy is set to require symbols")
+                    else:
+                        print("Current password policy DOESN'T require symbols (Recommended to have minimum of atleast 1 symbol)")
+                else:
+                    print("RequireSymbols is not set (Recommended to have minimum of atleast 1 symbol)")
+                print()
+                if('RequireNumbers' in responsePasswordPolicy):
+                    requireNumbers = responsePasswordPolicy['RequireNumbers']
+                    if(requireNumbers):
+                        print("Current password policy is set to require numbers")
+                    else:
+                        print("Current password policy DOESN'T require numbers (Recommended to have minimum of atleast 1 number)")
+                else:
+                    print("RequireNumbers is not set (Recommended to have minimum of atleast 1 number)")
+                print()
+                if('PasswordReusePrevention' in responsePasswordPolicy):
+                    reusePassword = responsePasswordPolicy['PasswordReusePrevention']
+                    if(reusePassword < 5):
+                        print("PasswordReusePrevention is set to "+str(reusePassword)+" (Recommended to set password resuse prevention atleast 5!!!)")
+                    else:
+                        print("PasswordReusePrevention is set to "+str(reusePassword))
+                else:
+                    print("PasswordReusePrevention is not Set (Recommended to set password resuse prevention atleast 5!!!)")
+                print()
+                if('MaxPasswordAge' in responsePasswordPolicy):
+                    maxpasswordage = responsePasswordPolicy['MaxPasswordAge']
+                    if(maxpasswordage < 90):
+                        print("MaxPasswordAge is "+str(maxpasswordage)+" (Recommended to have a maximum password age of 90 days)")
+                    else:
+                        print("MaxPasswordAge is "+str(maxpasswordage))
+                else:
+                    print("MaxPasswordAge is not set (Recommended to have a maximum password age of 90 days)")
+                print()
                 for k,v in responsePasswordPolicy.items():
                     print(str(k)+": "+str(v))
             except passwordPolicy.exceptions.NoSuchEntityException:
@@ -110,9 +172,9 @@ if __name__ == '__main__':
             unUsed_response = unUsedAccessKey.get_access_key_last_used(AccessKeyId=access_key)
             number_of_days = str(datetime.utcnow().date() - unUsed_response['AccessKeyLastUsed']['LastUsedDate'].date())
             if (int(number_of_days.split(' ')[0])) > 89:
-                print("Access Keys NOT assessed in last 90 days")
+                print("Access Key was NOT assessed in last 90 days")
             else:
-                print("Access Keys USED in last 90 days")
+                print("Access Key was assessed in the last 90 days")
         
         #display all the accounts with passwords not updated in more than 90 days
         if args.passwordNotUpdated:
