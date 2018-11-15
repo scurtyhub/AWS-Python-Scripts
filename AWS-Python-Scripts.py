@@ -13,6 +13,8 @@ def user_parse_args():
     parser.add_argument("-pN","--passwordNotUpdated",action="store_true", help="lists all the accounts that has passwords not updated in the last 90 days")
     parser.add_argument("-nT","--noEc2Tags",action="store_true", help="lists all the Ec2 instances that have no tags")
     parser.add_argument("-uP","--unusedPassword",action="store_true", help="lists all the IAM users who's passwords were not used in last 90 days")
+    parser.add_argument("-rM","--rootMFA",action="store_true", help="Checks if MFA is enabled or disabled on root account")
+    parser.add_argument("-rA","--rootAccountAccessKeys",action="store_true", help="Checks if root account has access keys created")
     return parser.parse_args()
 
 #Function to list all the users in the account
@@ -42,7 +44,7 @@ def checkMFA(userMFA):
 if __name__ == '__main__':
     args = user_parse_args()
 
-    if (args.allUsers | args.checkMFA | args.checkPasswordPolicy | args.listAccessKeys | args.unUsedAccessKeys | args.passwordNotUpdated | args.noEc2Tags | args.unusedPassword) == False:
+    if (args.allUsers | args.checkMFA | args.checkPasswordPolicy | args.listAccessKeys | args.unUsedAccessKeys | args.passwordNotUpdated | args.noEc2Tags | args.unusedPassword | args.rootMFA | args.rootAccountAccessKeys) == False:
         print("Choose an argument.\n-h    help")
     else:
         #prints list of users in the AWS account
@@ -69,9 +71,7 @@ if __name__ == '__main__':
                 responsePasswordPolicy = passwordPolicy.get_account_password_policy()['PasswordPolicy']
                 Min_Password_len = responsePasswordPolicy['MinimumPasswordLength']
                 upperCase = responsePasswordPolicy['RequireUppercaseCharacters']
-                
-                
-                
+                print("Password Policy:\n")
                 if(Min_Password_len < 14):
                     print("MinimumPasswordLength: "+str(Min_Password_len)+" (Recommended minimum password length is 14)")
                 else:
@@ -130,8 +130,6 @@ if __name__ == '__main__':
                 else:
                     print("MaxPasswordAge is not set (Recommended to have a maximum password age of 90 days)")
                 print()
-                for k,v in responsePasswordPolicy.items():
-                    print(str(k)+": "+str(v))
             except passwordPolicy.exceptions.NoSuchEntityException:
                 print("No Password Policy found!!!")     
 
@@ -212,3 +210,19 @@ if __name__ == '__main__':
                         password_age = int(str(datetime.utcnow().date()-i['PasswordLastUsed'].date()).split(' ')[0])
                         if password_age > 89:
                             print("For IAM user "+str(i['UserName'])+", Password last used is "+str(password_age)+" days ago")
+        
+        #Checks if MFA is enabled on the root account
+        if args.rootMFA:
+            client = boto3.client('iam')
+            if(client.get_account_summary()['SummaryMap']['AccountMFAEnabled']):
+                print("root MFA is enabled")
+            else:
+                print("root MFA is disabled (Recommended to enable MFA)")
+
+        #Checks if root account has access keys created
+        if args.rootAccountAccessKeys:
+            client = boto3.client('iam')
+            if(client.get_account_summary()['SummaryMap']['AccountAccessKeysPresent']):
+                print("root account has Access keys created (Recommended to disable them)")
+            else:
+                print("root account has NO access keys")
