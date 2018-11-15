@@ -18,12 +18,12 @@ pip install -r requirements.txt
 
 Using script
 -----
-Before running the script, please make sure you have [aws cli](https://docs.aws.amazon.com/cli/latest/userguide/installing.html) installed. Create an Access key in your AWS account with proper permissions and [configure aws cli](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html) it on your machine.
+Before running the script, please make sure you have [aws cli](https://docs.aws.amazon.com/cli/latest/userguide/installing.html) installed. Create an Access key in your AWS account with read permissions (they don't need admin privileges) and [configure aws cli](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html) it on your machine.
 
 ```
-python AWS-Python-Scripts.py [-h] [-aU] [-cM] [-pP] [-aK] [-uA] [-pN] [-nT] [--uP]
+python AWS-Python-Scripts.py [-h] [-aU] [-cM] [-pP] [-aK] [-uA] [-pN] [-nT] [-uP] [-rM] [-rA]
 
-python AWS-Python-Scripts.py [--help] [--allUsers] [--checkMFA] [--checkPasswordPolicy] [--listAccessKeys] [--unUsedAccessKeys] [--passwordNotUpdated] [--noEc2Tags] [--unusedPassword]
+python AWS-Python-Scripts.py [--help] [--allUsers] [--checkMFA] [--checkPasswordPolicy] [--listAccessKeys] [--unUsedAccessKeys] [--passwordNotUpdated] [--noEc2Tags] [--unusedPassword] [--rootMFA] [--rootAccountAccessKeys]
 ```
 
 * ```--allUsers```: Lists all users in your AWS account.
@@ -34,6 +34,8 @@ python AWS-Python-Scripts.py [--help] [--allUsers] [--checkMFA] [--checkPassword
 * ``--passwordNotUpdated``: Lists all the accounts that has passwords not updated in the last 90 days.
 * ``--noEc2Tags``: Lists Ec2 instance ids that doesn't have tags.
 * ``--unusedPassword``: Lists IAM users that has passwords not accessed in last 90 days.
+* ``--rootMFA``: Checks if MFA is enabled on the root account.
+* ``--rootAccountAccessKeys``: Checks if root account has any access keys.
  
 Example:
 -----
