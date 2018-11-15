@@ -15,6 +15,7 @@ def user_parse_args():
     parser.add_argument("-uP","--unusedPassword",action="store_true", help="lists all the IAM users who's passwords were not used in last 90 days")
     parser.add_argument("-rM","--rootMFA",action="store_true", help="Checks if MFA is enabled or disabled on root account")
     parser.add_argument("-rA","--rootAccountAccessKeys",action="store_true", help="Checks if root account has access keys created")
+    parser.add_argument("-mP","--IAMManagedPolicies",action="store_true", help="Checks if IAM account has managed policies directly attached")
     return parser.parse_args()
 
 #Function to list all the users in the account
@@ -44,7 +45,7 @@ def checkMFA(userMFA):
 if __name__ == '__main__':
     args = user_parse_args()
 
-    if (args.allUsers | args.checkMFA | args.checkPasswordPolicy | args.listAccessKeys | args.unUsedAccessKeys | args.passwordNotUpdated | args.noEc2Tags | args.unusedPassword | args.rootMFA | args.rootAccountAccessKeys) == False:
+    if (args.allUsers | args.checkMFA | args.checkPasswordPolicy | args.listAccessKeys | args.unUsedAccessKeys | args.passwordNotUpdated | args.noEc2Tags | args.unusedPassword | args.rootMFA | args.rootAccountAccessKeys | args.IAMManagedPolicies) == False:
         print("Choose an argument.\n-h    help")
     else:
         #prints list of users in the AWS account
@@ -226,3 +227,11 @@ if __name__ == '__main__':
                 print("root account has Access keys created (Recommended to disable them)")
             else:
                 print("root account has NO access keys")
+        
+        #Checks if IAM users has managed policies direclty attached
+        if args.IAMManagedPolicies:
+            client = boto3.client('iam')
+            response = client.get_account_authorization_details(Filter=['User'])
+            print()
+            for i in response['UserDetailList']:
+               print(str(i['UserName'])+" has "+str(len(i['AttachedManagedPolicies']))+" managed policies attached")
