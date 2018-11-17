@@ -37,7 +37,7 @@ python AWS-Python-Scripts.py [--help] [--allUsers] [--checkMFA] [--checkPassword
 * ``--rootMFA``: Checks if MFA is enabled on the root account.
 * ``--rootAccountAccessKeys``: Checks if root account has any access keys.
 * ``--IAMManagedPolicies``: Checks if IAM users has managed policies direclty attached
-* ``--listTrail``: Lists Cloudtrail in the account
+* ``--listTrail``: Lists Cloudtrail and its attributes in the account
  
 Example:
 -----

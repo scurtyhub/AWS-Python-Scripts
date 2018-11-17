@@ -16,7 +16,7 @@ def user_parse_args():
     parser.add_argument("-rM","--rootMFA",action="store_true", help="Checks if MFA is enabled or disabled on root account")
     parser.add_argument("-rA","--rootAccountAccessKeys",action="store_true", help="Checks if root account has access keys created")
     parser.add_argument("-mP","--IAMManagedPolicies",action="store_true", help="Checks if IAM account has managed policies directly attached")
-    parser.add_argument("-lT","--listTrail",action="store_true", help="Lists Cloudtrail")
+    parser.add_argument("-lT","--listTrail",action="store_true", help="Lists Cloudtrail and its attributes")
     return parser.parse_args()
 
 #Function to list all the users in the account
@@ -42,6 +42,7 @@ def checkMFA(userMFA):
             if len(d) != 0:
                 mfa_is_True = True
     return mfa_is_True
+
 
 if __name__ == '__main__':
     args = user_parse_args()
@@ -237,7 +238,7 @@ if __name__ == '__main__':
             for i in response['UserDetailList']:
                print(str(i['UserName'])+" has "+str(len(i['AttachedManagedPolicies']))+" managed policies attached")
         
-        #Lists Cloudtrail trails
+        #Lists Cloudtrail trails and its attributes
         if args.listTrail:
             client = boto3.client('cloudtrail')
             response = client.describe_trails()
@@ -245,5 +246,14 @@ if __name__ == '__main__':
                 print("No trails found. Enable Cloudtrail on all regions")
             else:
                 for i in response['trailList']:
-                    print(str(i['Name'])+" trail goes to the bucket "+str(i['S3BucketName']))
+                    trailStatus = client.get_trail_status(Name=i['Name'])
+                    if trailStatus['IsLogging']:
+                        StatusOn = "Enabled"
+                    else:
+                        StatusOn = "Disabled"
+                    if i['IsMultiRegionTrail']:
+                        regionAll = "Enabled"
+                    else:
+                        regionAll = "Disabled"
+                    print(str(i['Name'])+" trail goes to the bucket "+str(i['S3BucketName'])+", Trail logging is "+StatusOn+"and "+regionAll+" on all regions")
 
