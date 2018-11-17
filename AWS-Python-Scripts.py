@@ -248,12 +248,12 @@ if __name__ == '__main__':
                 for i in response['trailList']:
                     trailStatus = client.get_trail_status(Name=i['Name'])
                     if trailStatus['IsLogging']:
-                        StatusOn = "Enabled"
+                        StatusOn = "turned on"
                     else:
-                        StatusOn = "Disabled"
+                        StatusOn = "turned off"
                     if i['IsMultiRegionTrail']:
-                        regionAll = "Enabled"
+                        regionAll = "enabled"
                     else:
-                        regionAll = "Disabled"
-                    print(str(i['Name'])+" trail goes to the bucket "+str(i['S3BucketName'])+", Trail logging is "+StatusOn+"and "+regionAll+" on all regions")
+                        regionAll = "disabled"
+                    print("\""+str(i['Name'])+"\" trail goes to the bucket "+str(i['S3BucketName'])+", Trail logging is "+StatusOn+" and "+regionAll+" on all regions")
 
