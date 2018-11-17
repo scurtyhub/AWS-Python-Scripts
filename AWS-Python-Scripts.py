@@ -254,6 +254,6 @@ if __name__ == '__main__':
                     if i['IsMultiRegionTrail']:
                         regionAll = "enabled"
                     else:
-                        regionAll = "disabled"
+                        regionAll = "NOT enabled"
                     print("\""+str(i['Name'])+"\" trail goes to the bucket "+str(i['S3BucketName'])+", Trail logging is "+StatusOn+" and "+regionAll+" on all regions")
 
