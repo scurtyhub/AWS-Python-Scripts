@@ -248,12 +248,19 @@ if __name__ == '__main__':
                 for i in response['trailList']:
                     trailStatus = client.get_trail_status(Name=i['Name'])
                     if trailStatus['IsLogging']:
-                        StatusOn = "turned on"
+                        StatusOn = "turned On"
                     else:
-                        StatusOn = "turned off"
+                        StatusOn = "turned Off (Recommended to be turned On)"
                     if i['IsMultiRegionTrail']:
-                        regionAll = "enabled"
+                        regionAll = "True"
                     else:
-                        regionAll = "NOT enabled"
-                    print("\""+str(i['Name'])+"\" trail goes to the bucket "+str(i['S3BucketName'])+", Trail logging is "+StatusOn+" and "+regionAll+" on all regions")
-
+                        regionAll = "False (Recommended to be enabled on ALL regions)"
+                    if i['LogFileValidationEnabled']:
+                        fileValidate = "Pass"
+                    else:
+                        fileValidate = "Fail (Recommended to turn On log file validation for log integrity check"
+                    print(str(i['Name'])+":")
+                    print("    Logging to the bucket: "+str(i['S3BucketName']))
+                    print("    Status: "+StatusOn)
+                    print("    Logging on ALL regions: "+regionAll)
+                    print("    Log file Integrity check: "+fileValidate)
