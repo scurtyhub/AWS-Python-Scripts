@@ -259,6 +259,8 @@ if __name__ == '__main__':
                         fileValidate = "Pass"
                     else:
                         fileValidate = "Fail (Recommended to turn On log file validation for log integrity check"
+                    bucketClient = boto3.client('s3')
+                    bucketResponse = client.get_bucket_encryption(Bucket=i['S3BucketName'])
                     print(str(i['Name'])+":")
                     print("    Logging to the bucket: "+str(i['S3BucketName']))
                     print("    Status: "+StatusOn)
