@@ -36,7 +36,7 @@ python AWS-Python-Scripts.py [--help] [--allUsers] [--checkMFA] [--checkPassword
 * ``--unusedPassword``: Lists IAM users that has passwords not accessed in last 90 days.
 * ``--rootMFA``: Checks if MFA is enabled on the root account.
 * ``--rootAccountAccessKeys``: Checks if root account has any access keys.
-* ``--IAMManagedPolicies``: Checks if IAM users has managed policies direclty attached
+* ``--IAMManagedPolicies``: Checks if IAM users has managed policies directly attached
 * ``--listTrail``: Lists Cloudtrail and its attributes in the account
  
 Example:
